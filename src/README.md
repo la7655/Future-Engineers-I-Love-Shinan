@@ -1,6 +1,6 @@
 Control software
 ====
 
-This directory must contain code for control software which is used by the vehicle to participate in the competition and which was developed by the participants.
+Arduino IDE is a hardware platform, Write the program and burn the program into the Matrix MINI.
+![image](https://user-images.githubusercontent.com/68604072/139283111-35693d65-8e69-4387-8e2d-e7097f48caa9.png)
 
-All artifacts required to resolve dependencies and build the project must be included in this directory as well.
