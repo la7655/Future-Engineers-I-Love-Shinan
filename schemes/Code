@@ -1,1 +1,229 @@
+#include <MatrixMini.h>
+#define IN1PIN 5
+#define EN1PIN 6
 
+int Far_Block_Code = 0, Close_Block_Code = 0, Last_Far_Block_Code = 0, Departure_Time, Start_Area, Spin_Direction,
+    Block_X, Block_Size, Turn_Dis, Pixy2_Block_Size, Shun_Block_X, inverse_Block_X, Block_Count, time_reset;
+int power = 65;
+long US_Filter_Last_Error, Compass_Error, Compass_Error_Last, US_Last_Error;
+long Servo_Middle = 90, pixy2_Servo = 102, Dodag_Turn_Angle = 20;
+float CP_Kp = -0.6, CP_Kd = -2;
+
+int Compass[2][4] = {
+  {273, 350, 74, 176},
+  {270, 183, 75, 346}
+};
+
+int US_Dis_Turn[2][3] = {
+  {65, 75, 65},
+  {65, 55, 75} 
+};
+
+long Turn_Go_Time[2][3] = {
+  {200, 70, 270},
+  {200, 300, 250}
+};
+long Pixy2_Servo_Angle[2] = {3, - 3};
+
+void setup() {
+  Serial.begin(115200);
+  Mini.begin();
+  Mini.I2C1.PIXYcam.pixyinit(6);
+  Mini.RC1.set(Servo_Middle);
+  Mini.RC2.set(pixy2_Servo);
+}
+
+void loop() {
+  long Time_Reset = millis();
+  bool Mode = false;
+  while ((Mini.BTN1.get() == 1 || Mini.BTN2.get() == 1) && Mode == false) {
+    Mode = millis() - Time_Reset > 1000;
+  }
+  if (Mode == true)
+  {
+    while (1) {
+      Pixy2_Block_Size = 650;
+      Shun_Block_X = 200;
+      inverse_Block_X = 100;
+      Mini.I2C1.PIXYcam.getblock(0, 1);
+      Block_Count = Mini.I2C1.PIXYcam.getCountofBlock();
+      Block_Switch_Logic(Block_Count);
+    }
+  }
+  Start_Decide();
+  Departure_Time = 400;
+  Pixy2_Block_Size = 2000;
+  Shun_Block_X = 200;
+  inverse_Block_X = 100;
+  for (int i = 0; i < 12; i++) {
+    Time_Reset = millis();
+    Compass_Error = 100;
+    Block_Count = 0;
+    while (US_Go_Error > US_Dis_Turn[Spin_Direction][0] && Block_Count == 0 || abs(Compass_Error) > 10) {
+      Mini.I2C1.PIXYcam.getblock(0, 1);
+      Block_Count = Mini.I2C1.PIXYcam.getCountofBlock();
+      US_Go_Error = Mini.D2.US.get();
+      Compass_Error = Compass_Heading(Compass[Spin_Direction][Start_Area]);
+      Go();
+    }
+    Block_Switch_Logic(Block_Count);
+    Dogde();
+    Start_Area++;
+    if (Start_Area >= 4) {
+      Start_Area = 0;
+    }
+    Mini.RC2.set(pixy2_Servo - Pixy2_Servo_Angle[Spin_Direction]);
+    Turn(25);
+    Last_Far_Block_Code = Far_Block_Code / 3;
+    Departure_Time = 1000;
+    Pixy2_Block_Size = 650;
+    Shun_Block_X = 200;
+    inverse_Block_X = 100;
+  }
+  Go_Time(500, Start_Area);
+  digitalWrite(IN1PIN, LOW);
+  analogWrite(EN1PIN, LOW);
+  while (1) {
+    delay(100);
+  }
+}
+
+void Block_Switch_Logic(int Block_Count) {
+  Mini.I2C1.PIXYcam.getblock(0, 1);
+  if (Block_Count == 0) {
+    Far_Block_Code = 0;
+    Close_Block_Code = 0;
+  } else if (Block_Count == 1) {
+    long Block_Size = Mini.I2C1.PIXYcam.block.width * Mini.I2C1.PIXYcam.block.height;
+    long Block_X =  Mini.I2C1.PIXYcam.block.x;
+    if (Block_Size >  Pixy2_Block_Size) {
+      Far_Block_Code = 0;
+      Close_Block_Code = Mini.I2C1.PIXYcam.block.signature;
+    } else {
+      if ((Block_X < Shun_Block_X && Spin_Direction == 0) || (Block_X > inverse_Block_X && Spin_Direction == 1)) {
+        Far_Block_Code = 0;
+        Close_Block_Code = Mini.I2C1.PIXYcam.block.signature;
+      } else {
+        Far_Block_Code = Mini.I2C1.PIXYcam.block.signature * 3;
+        Close_Block_Code = 0;
+      }
+    }
+  } else if (Block_Count == 2) {
+    Mini.I2C1.PIXYcam.getblock(0, 1);
+    Close_Block_Code = Mini.I2C1.PIXYcam.block.signature;
+    Mini.I2C1.PIXYcam.getblock(0, 2);
+    Far_Block_Code = Mini.I2C1.PIXYcam.block.signature * 3;
+  }
+}
+
+void To_No_Block() {
+  int Block_Count_last = 100;
+  while (Block_Count_last > Block_Count - 1) {
+    Mini.I2C1.PIXYcam.getblock(0, 1);
+    Block_Count_last = Mini.I2C1.PIXYcam.getCountofBlock();
+    Compass_Error = Compass_Heading(Compass[Spin_Direction][Start_Area]);
+    Go();
+  }
+}
+
+void Dogde() {
+  if (Close_Block_Code == 0 || Close_Block_Code ==  Last_Far_Block_Code) {
+    if ( Close_Block_Code ==  Last_Far_Block_Code && Last_Far_Block_Code != 0) {
+      To_No_Block();
+    } else {
+
+    }
+  } else if (Close_Block_Code == 1) {
+    Mini.RC1.set(Servo_Middle + Dodag_Turn_Angle);
+    delay(300);
+    To_No_Block();
+  } else if (Close_Block_Code == 2) {
+    Mini.RC1.set(Servo_Middle - Dodag_Turn_Angle);
+    delay(300);
+    To_No_Block();
+  }
+  Turn_Dis = US_Dis_Turn[Spin_Direction][Far_Block_Code / 3];
+  Go_US(Turn_Dis, Start_Area);
+}
+
+void Turn(int MaxTurn) {
+  long Servo_Angle;
+  if (Spin_Direction == 0) {
+    Servo_Angle = Servo_Middle + MaxTurn;
+  } else {
+    Servo_Angle = Servo_Middle - MaxTurn;
+  }
+  Mini.RC1.set(Servo_Angle);
+  Compass_Error = 100;
+  while (abs(Compass_Error) > 15) {
+    Compass_Error = Compass_Heading(Compass[Spin_Direction][Start_Area]);
+  }
+  Compass_Error = 100;
+  while (abs(Compass_Error) > 10) {
+    Compass_Error = Compass_Heading(Compass[Spin_Direction][Start_Area]);
+    Go();
+  }
+  Go_Time(Turn_Go_Time[Spin_Direction][Close_Block_Code], Start_Area);
+}
+
+
+int Compass_Heading(int Direction) {
+  int Error = Direction - Mini.I2C2.HTcompass.getHeading() + 180;
+  if (Error >= 0) {
+    return Error % 359 - 180;
+  } else {
+    return (359 - (-1 - Error) % 360) - 180;
+  }
+}
+
+void Go_US(int US_Target, int CP_Count) {
+  Compass_Error = 100;
+  long US_Error = 100;
+  while (US_Error > US_Target || abs(Compass_Error) > 10 ) {
+    Compass_Error = Compass_Heading(Compass[Spin_Direction][CP_Count]);
+    US_Error = Mini.D2.US.get();
+    Go();
+  }
+}
+
+void Go_Time(int times, int CP_Count) {
+  long Time_Reset = millis();
+  while (millis() - Time_Reset < times) {
+    Compass_Error = Compass_Heading(Compass[Spin_Direction][CP_Count]);
+    Go();
+  }
+}
+
+void Start_Decide() {
+  while (Mini.BTN1.get() == 0 && Mini.BTN2.get() == 0) {
+    delay(100);
+  }
+  if (Mini.BTN1.get() == 1) {
+    Spin_Direction = 0;
+    Mini.RC2.set(pixy2_Servo - 5);
+  } else {
+    Spin_Direction = 1;
+    Mini.RC2.set(pixy2_Servo + 8);
+  }
+  for (int i = 0; i < 4; i++) {
+    Start_Area = i;
+    if (abs(Compass_Heading(Compass[Spin_Direction][i])) < 20) {
+      break;
+    }
+  }
+  delay(300);
+  int Power = map(power, 0, 100 , 0, 255);
+  digitalWrite(IN1PIN, HIGH);
+  analogWrite(EN1PIN, Power);
+}
+
+void Go(){
+  Mini.RC1.set(90);
+  digitalWrite(IN1PIN, HIGH);
+  analogWrite(EN1PIN, Power);
+}
+
+void Stop(){
+  digitalWrite(IN1PIN, LOW);
+  analogWrite(EN1PIN, Power);
+}
