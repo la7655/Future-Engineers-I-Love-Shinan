@@ -9,6 +9,7 @@ Our vehicle uses four sensors, one servo motor, one DC motor, and one controller
 
 #### Compass Sensor
 The Compass Sensor is used to detect the direction of the vehicle.
+
 ![image](https://github.com/la7655/Future-Engineers-I-Love-Shinan/blob/main/other/cmopass%20sensor.png)
 
 ### Vehicle Components Introduction
