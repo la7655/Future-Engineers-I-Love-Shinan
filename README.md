@@ -36,3 +36,18 @@ Control the Ackerman steering mechanism to make the vehicle turn.
 We use DuPont wire and RJ495 connector to connect the sensor to the motor and the controller.
 
 ![image](https://github.com/la7655/Future-Engineers-I-Love-Shinan/blob/main/other/Component%20Configuration.png)
+## Vehicle Structure Introduction
+### Differential
+In order to solve the problem that the path taken by the outer wheels is larger than the path taken by the inner wheels when turning, we install a differential.
+
+![image](https://github.com/la7655/Future-Engineers-I-Love-Shinan/blob/main/other/Differential.png)
+### Steering Mechanism
+In order to have better steering, we design the steering rudder as Ackerman steering structure, and use the servo motor to control the steering of the steering rudder.
+![image](https://github.com/la7655/Future-Engineers-I-Love-Shinan/blob/main/other/Steering%20Mechanism.png)
+
+## Abstract of Robot Rogramming
+Arduino IDE is a hardware platform, Write the program and burn the program into the Matrix MINI. Write the program and burn the program into the Matrix MINI.
+
+![image](https://github.com/la7655/Future-Engineers-I-Love-Shinan/blob/main/other/arduino.png)
+
+
