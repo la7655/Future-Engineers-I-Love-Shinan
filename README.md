@@ -46,8 +46,23 @@ In order to have better steering, we design the steering rudder as Ackerman stee
 ![image](https://github.com/la7655/Future-Engineers-I-Love-Shinan/blob/main/other/Steering%20Mechanism.png)
 
 ## Abstract of Robot Rogramming
+### Programming Language
 Arduino IDE is a hardware platform, Write the program and burn the program into the Matrix MINI. Write the program and burn the program into the Matrix MINI.
 
 ![image](https://github.com/la7655/Future-Engineers-I-Love-Shinan/blob/main/other/arduino.png)
+### Flowchart
+![image](https://github.com/la7655/Future-Engineers-I-Love-Shinan/blob/main/other/flowchart.png)
+### Programming Introduction
+#### “Block_Switch_Logic” Function -Judging raffic Signs And Dodge
+![image](https://user-images.githubusercontent.com/68604072/139440799-dc41f8f9-ba7f-4b4f-907e-01cb330cb4fe.png)
+
+“Block_Switch_Logic” function will determine the distance, quantity, coordinates, area and color detected by the Pixy2 image sensor. When the traffic sign approaches, the direction of the dodge action will be executed according to the color. If there is no traffic sign or the traffic sign is far away from the organization, the dodge action will not be executed.
+
+![image](https://github.com/la7655/Future-Engineers-I-Love-Shinan/blob/main/other/Block%20switch%20function.png)
+#### “Start_Decide” Function - Detect Vehicle Direction
+“Start_Decide” function is used to detect the button you press to determine the direction of the vehicle. When you press button 1, it will move clockwise, and button 2 will move counterclockwise. When the program starts, it will detect the value of the electronic compass to know where it starts.
+
+![image](https://github.com/la7655/Future-Engineers-I-Love-Shinan/blob/main/other/start%20decide.png)
+
 
 
