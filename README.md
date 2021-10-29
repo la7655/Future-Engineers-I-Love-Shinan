@@ -1,4 +1,16 @@
 # Future-Engineers-I-Love-Shinan
+## Team Introduction
+**LIAO,YI-AN**
+
+Shinan Junior High School
+
+**LIN,CHING-PIN**
+
+Taiping Junior High School
+
+**胡賢邑**
+
+Chung Lun Junior High School
 ### Vehicle Design Concept
 In order to have better steering so we design the Ackerman steering in vehicle. And use the servo motor to control the steering. We download Differential at the mover motor.
 
@@ -64,5 +76,9 @@ Arduino IDE is a hardware platform, Write the program and burn the program into 
 
 ![image](https://github.com/la7655/Future-Engineers-I-Love-Shinan/blob/main/other/start%20decide.png)
 
+## Engineer Notebook
+Record Date：2021.7.1
+Content：
+>We read the Chinese rules and discussed the length and width limitations of the organisation.We began to discuss the sensors and design and manufacture of the organisation, how >to use only one DC motor and how to make the steering structure.
 
 
