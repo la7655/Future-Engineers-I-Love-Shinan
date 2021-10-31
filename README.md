@@ -78,7 +78,29 @@ Arduino IDE is a hardware platform, Write the program and burn the program into 
 
 ## Engineer Notebook
 Record Date：2021.7.1
-Content：
 >We read the Chinese rules and discussed the length and width limitations of the organisation.We began to discuss the sensors and design and manufacture of the organisation, how >to use only one DC motor and how to make the steering structure.
 
+![image]()
 
+Record Date：110.7.4
+We use the rigid Matrix Mini metal kit and the easy-to-fit Lego parts manufacturing mechanism.We use the upper half of the base plate mechanism to build the Matrix Mini metal kit.
+
+![image]()
+
+Record Date：110.7.4
+We installed L298n DC Controller GA25-371 DC Controller because there was no direct GA25-371 DC Controller for our use.Since L298n DC Madonna Control Board needs to be connected to external sources, we manufacture an electric line for Legato3S off-leave polymer line for Legato298n DC Madonna Control Board. 
+
+![image]()
+
+Record Date：110.7.7
+After the actual test, we found that the battery could easily come off the vehicle. To solve this problem, we installed Devil's Stain on the vehicle and the battery so that it could be more effectively attached to the vehicle.Based on actual measurements, this method is indeed feasible.
+
+![image]()
+
+Record Date：110.7.9
+We're going to plan an ultrasound sensor on a car, use it to leave somewhere, know if it needs to be, and then it's going to flip over because of its position, so we're going to flip it early and late, so we're going to multi-position it.
+
+![image]()
+
+Record Date：110.7.13
+Today's test found that the outer wheel takes a larger path when turning than the inner wheel. To ensure smooth and accurate turning of the mechanism, we installed a differential on the rear wheel to make the mechanism more smooth when turning.
