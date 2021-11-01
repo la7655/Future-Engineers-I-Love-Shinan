@@ -20,6 +20,9 @@ Chung Lun Junior High School
 
 ![image](https://github.com/la7655/Future-Engineers-I-Love-Shinan/blob/main/%E7%9B%B8%E7%89%87/team%20photos/2021.10.31-2.jpg)
 
+### Official Photo
+
+![image](https://github.com/la7655/Future-Engineers-I-Love-Shinan/blob/main/%E7%9B%B8%E7%89%87/team%20photos/official.jpg)
 ## YouTube URL
 
 https://www.youtube.com/watch?v=a5rj4Xyn4FA
